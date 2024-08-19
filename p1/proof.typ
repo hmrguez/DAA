@@ -121,3 +121,5 @@ ans -= x * (s - k)
 
 return ans
 ```
+
+La complejidad de esta solucion es O(n*log(f)) donde f es max(a)
