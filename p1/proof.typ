@@ -35,7 +35,7 @@ Para demostrar que la elección greedy de siempre seleccionar el mayor  a[i]  en
 2.	Considera la Primera Desviación:
     -	Considera la primera operación donde esta secuencia óptima no selecciona el mayor  a[i] . En su lugar, selecciona algún  a[j]  donde  a[j] < a[i] .
     -	Al seleccionar  a[j]  en lugar de  a[i] , la contribución inmediata a la puntuación es  a[j] , que es menor que  a[i] .
-3.	Reemplazo con la Elección Avara:
+3.	Reemplazo con la Elección Greedy:
     -	Si reemplazamos  a[j]  con  a[i]  para esa operación, la puntuación en ese paso aumenta. Además, el resto de las operaciones permanecen sin afectar o se pueden ajustar reinsertando el  a[i]  actualizado de vuelta en el heap, lo que podría dar los mismos o incluso mejores resultados.
 4.	Puntuación Resultante:
     -	Dado que reemplazar  a[j]  con  a[i]  lleva a un aumento en la puntuación, esto implica que la elección greedy (seleccionar el mayor  a[i]  en cada paso) no puede dar un resultado peor que cualquier otra secuencia.
@@ -72,7 +72,7 @@ La complejidad de esta solucion es O(nlogn + klogn) donde n es el tamaño de la 
 
 Vamos a usar busqueda binaria para la siguiente solucion.
 
-Definamos primero la funcion de optimizacion `f(x)`:
+Definamos primero la funcion de utilidad `f(x)`:
 - `f(x)`: es el numero de operaciones necesarias para que todos los valores añadidos al score en alguna operacion sean al menos x, y que todos los valores restantes en `a` sean a lo sumo x - 1.
 
  Para un solo valor de i, que a[i] < x, se necesita reducir a[i] una cierta cantidad de b[i], o sea $ a[i] - b[i] * t < x $, luego despuejando `t` queda que $ t > frac(a[i] - x, b[i]) $, por lo tanto, el numero de operaciones necesarias para que a[i] sea al menos x es $ ceil(frac(a[i] - x, b[i])) $.
