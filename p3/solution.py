@@ -11,9 +11,9 @@ def is_clique(graph, vertices):
 
 # Function to check if the remaining vertices form a valid tail connected to the clique
 def is_valid_tail(graph, clique, tail):
-    # Check if the tail is connected to exactly one vertex in the clique
-    connected_to_clique = [v for v in clique if any(u in graph[v] for u in tail)]
-    if len(connected_to_clique) != 1:
+    # Check if the tail is connected to one vertex in the clique
+    connected_to_clique = any([v for v in clique if any(u in graph[v] for u in tail)])
+    if not connected_to_clique:
         return False
 
     # Check if the tail forms a simple path (no repeated edges)
