@@ -71,7 +71,7 @@ La creación de este grafo `G'` se puede hacer en `O(|V|)`, es decir, en tiempo 
 
 Ahora veamos cómo se desempeña la conversión de solución de esta nueva instancia del problema del cometa con la del *clique*.
 
-La solución del problema del cometa resuelve dos conjuntos de nodos disjuntos: el *clique* `C` y la *cola* `T`. Los nuevos nodos que añadimos no forman parte de un *clique*, ya que cada uno de esos nodos está conectado solo a un nodo del grafo original y, como mucho, a dos de los nuevos nodos. El único caso donde podrían formar un *clique* es si $K #sym.lt.eq 3$ , pero ese caso es trivial.
+La solución del problema del cometa resuelve dos conjuntos de nodos disjuntos: el *clique* `C` y la *cola* `T`. Los nuevos nodos que añadimos no forman parte de un *clique*, ya que cada uno de esos nodos está conectado solo a un nodo del grafo original y, como mucho, a dos de los nuevos nodos. El único caso donde podrían formar un *clique* es si $K #sym.lt.eq 2$ , pero ese caso es trivial.
 
 Por tanto, en la posible solución del cometa, todos los nodos de `C` están en `G`, el grafo original del problema de *Clique*, y todos los nodos de `T` están en `G'`. Para convertir de nuevo el problema al de *Clique*, basta con quitar todas las aristas que creamos y quedarnos con el grafo original.
 
@@ -88,4 +88,4 @@ Por tanto, el problema del cometa es *NP-Hard*, ya que se puede reducir en tiemp
 
 == Solución Fuerza Bruta
 
-Como el problema es *NP-Completo*, el único camino posible para resolverlo sin aproximaciones es con *fuerza bruta*. La solución consiste en generar todas las combinaciones posibles de `K` nodos y verificar si forman un *clique*. Luego, por cada combinación de `K` nodos, se verifica si se puede formar un cometa con esos nodos.
+Como el problema es *NP-Completo*, el único camino posible para resolverlo sin aproximaciones es con *fuerza bruta*. La solución consiste en generar todas las combinaciones posibles de `K` nodos y verificar si forman un *clique*. Luego, por cada combinación de `K` nodos, se verifica si existe una combinacion de `K` nodos del resto que formen una cola hacia ese clique, si existe entonces tenemos un cometa.
