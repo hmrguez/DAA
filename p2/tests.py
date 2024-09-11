@@ -7,7 +7,7 @@ from solution import solve
 class TestSolutions(unittest.TestCase):
     def generate_random_array(self, n, max_value=1000, seed=None):
         if seed is not None:
-            random.seed(seed)
+            random.seed(1000)
         return [random.randint(0, max_value) for _ in range(n)]
 
     def test_solutions(self):
@@ -17,7 +17,7 @@ class TestSolutions(unittest.TestCase):
 
         for i in range(num_tests):
             n = random.randint(1, max_n)
-            a = self.generate_random_array(n, max_value, seed=i)
+            a = self.generate_random_array(n, max_value)
 
             # Add a leading zero to match the input format of the solve function
             a_with_leading_zero = [0] + a
