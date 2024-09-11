@@ -3,7 +3,7 @@ class Trie:
         self.child = [None, None]
 
 
-def insert(trie, x):
+def insert(trie: Trie, x: int) -> None:
     temp = trie
     for i in range(30, -1, -1):
         curr = (x >> i) & 1
@@ -12,7 +12,7 @@ def insert(trie, x):
         temp = temp.child[curr]
 
 
-def find_greatest(trie, x):
+def find_greatest(trie: Trie, x: int) -> int:
     res = 0
     temp = trie
     for i in range(30, -1, -1):
@@ -25,7 +25,7 @@ def find_greatest(trie, x):
     return res
 
 
-def solve(n, a):
+def solve(n: int, a: [int]) -> int:
     # Initialize Trie and prexor
     t = [None] * (n + 2)
     prexor = [0] * (n + 1)
