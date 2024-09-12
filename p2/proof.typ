@@ -95,10 +95,12 @@ Para demostrar que el enfoque de programación dinámica es correcto, debemos es
 $"apatia" = a#sub[1] #sym.xor a#sub[1] = 0 $
 
 	•	Por lo tanto, el caso base se cumple de manera trivial.
+
 	2.	Caso recursivo:
 	•	Para un subarreglo de longitud  n , se debe encontrar la apatia máxima considerando todos los subarreglos que contienen un elemento máximo específico  `a[x]` .
 	•	El algoritmo divide el arreglo en dos mitades según la posición de  `a[x]`  y calcula la apatia de los subarreglos izquierdo y derecho de manera independiente.
 	•	Estos subproblemas se pueden resolver recursivamente aplicando el mismo procedimiento (dividiendo los subarreglos izquierdo y derecho en subarreglos más pequeños). Esto garantiza que todo el problema se resuelva de manera óptima si todos los subarreglos más pequeños se resuelven de manera óptima.
+
 	3.	Combinando los resultados de los subproblemas:
 	•	Una vez que tenemos las soluciones óptimas para los subarreglos a la izquierda y derecha de  `a[x]` , se calcula la apatia máxima para los subarreglos que contienen a  `a[x]`  consultando el subarreglo opuesto usando el Trie.
 	•	La consulta maximiza el XOR de los subarreglos que involucran ambas mitades y se almacena el resultado.
@@ -114,6 +116,7 @@ En programación dinámica, los subproblemas superpuestos implican que el algori
 	1.	Estructura Trie:
 	•	El Trie almacena los valores de XOR de prefijo para los subarreglos que ya se han procesado. Esto permite que el algoritmo reutilice estos valores al calcular la apatia de subarreglos más grandes.
 	•	En lugar de recalcular el XOR para subarreglos superpuestos varias veces, el algoritmo simplemente consulta el Trie, que ya ha almacenado los valores de XOR de prefijo necesarios de cálculos anteriores.
+
 	2.	Fusión de los Tries:
 	•	Al fusionar el Trie más pequeño en el más grande, el algoritmo asegura que los resultados del subarreglo más pequeño se reutilicen al procesar el subarreglo más grande. Esta reutilización de información evita que el algoritmo resuelva el mismo subproblema varias veces.
 	•	El paso de fusión garantiza que la complejidad computacional siga siendo eficiente, ya que el Trie de cada subarreglo se utiliza para calcular rápidamente el XOR de subarreglos que abarcan ambas mitades.
