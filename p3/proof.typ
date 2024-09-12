@@ -89,3 +89,21 @@ Por tanto, el problema del cometa es *NP-Hard*, ya que se puede reducir en tiemp
 == Solución Fuerza Bruta
 
 Como el problema es *NP-Completo*, el único camino posible para resolverlo sin aproximaciones es con *fuerza bruta*. La solución consiste en generar todas las combinaciones posibles de `K` nodos y verificar si forman un *clique*. Luego, por cada combinación de `K` nodos, se verifica si existe una combinacion de `K` nodos del resto que formen una cola hacia ese clique, si existe entonces tenemos un cometa.
+
+== Grafos especiales y sus cometas
+
+Definamos como solución trivial del problema de cometa de tamaño $2K$ y un grafo de tamaño `n` si $2K > n$ y si $K < 3$, la primera no tiene solución y la segunda es solución cualquier grafo con un camino de tamaño `4`
+
+1. K#sub[n] tiene solucion $forall n : n >= 2K$, ya que implícitamente tiene dos cliques inducidos de tamaño K y disjuntos, uno servirá para el clique de la solución y el otro para el camino.
+2. C#sub[n] y P#sub[n] no tienen solución no trivial, es imposible que tengan un clique de tamaño mayor que 2.
+3. Los grafos planares no tienen solución para $K>4$, es imposible que tengan un clique de tamaño mayor que 4.
+4. Los árboles no tienen solución no trivial.
+5. Grafos n-partitos pueden tener solucion unicamente si $K<=n$, evidentemente ya que para que pueda haber un clique cada nodo tiene que estar en su propia particion
+
+== Aproximaciones con parámetros fijos
+
+1. K fijo
+
+La complicacion de este problema tecnicamente es $O(K^n*K^(n-K))$, o sea es exponencial dependiendo de K
+
+
