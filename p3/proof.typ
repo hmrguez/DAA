@@ -98,12 +98,49 @@ Definamos como solución trivial del problema de cometa de tamaño $2K$ y un gra
 2. C#sub[n] y P#sub[n] no tienen solución no trivial, es imposible que tengan un clique de tamaño mayor que 2.
 3. Los grafos planares no tienen solución para $K>4$, es imposible que tengan un clique de tamaño mayor que 4.
 4. Los árboles no tienen solución no trivial.
-5. Grafos n-partitos pueden tener solucion unicamente si $K<=n$, evidentemente ya que para que pueda haber un clique cada nodo tiene que estar en su propia particion
 
-== Aproximaciones con parámetros fijos
+== Grafos m-partitos
 
-1. K fijo
+Si el grafo es *m-partito* sucede algo curioso que puede reducir la complejidad temporal de la solucion
 
-La complicacion de este problema tecnicamente es $O(K^n*K^(n-K))$, o sea es exponencial dependiendo de K
+=== Suposiciones:
+1. *Grafo m-partito*: El grafo está dividido en `m` conjuntos disjuntos (particiones) de vértices.
+2. *Tamaño del clique `k`*: El tamaño del clique `k` debe ser menor o igual a ` m `, ya que cada vértice en el clique debe provenir de una partición diferente, debido a las propiedades de un grafo multipartito.
+3. *Camino*: La "cola" es un camino de longitud `k`, y el objetivo es encontrar este camino utilizando una búsqueda en profundidad (DFS) comenzando desde uno de los vértices en el clique.
 
+=== Observaciones clave:
+- *Restricción del clique*: No puedes tener un clique más grande que ` m ` en un grafo ` m `-partito, ya que no hay dos vértices en la misma partición que estén conectados. Esto simplifica la búsqueda de un clique de tamaño ` k `.
+- *Principio del palomar*: Si ` k > m `, encontrar un clique de tamaño ` k ` es imposible, ya que requeriría que al menos dos vértices de la misma partición estuvieran conectados, lo cual no está permitido.
 
+=== Formalización paso a paso:
+
+==== Paso 1: Encontrar el Clique
+
+Para encontrar un clique de tamaño `k`:
+- Solo puedes seleccionar un vértice de cada partición. La clave es que, dado que el grafo es `m`-partito, no necesitas verificar todas las combinaciones de vértices, sino solo aquellas donde los vértices provienen de diferentes particiones.
+
+- *Enfoque*: Iterar sobre todos los subconjuntos de `m`-particiones y elegir un vértice de cada partición. Verificar si los vértices seleccionados forman un clique. Esto requiere verificar que haya un borde entre cada par de vértices seleccionados (de diferentes particiones).
+
+- *Complejidad temporal de la búsqueda del clique*:
+  - Necesitas considerar todos los subconjuntos de `k`-particiones de `m`, lo que se puede hacer en $O( binom(m,k) )$ (el número de maneras de elegir `k` particiones de `m`).
+  - Para cada subconjunto de `k` particiones, necesitas verificar todas las posibles combinaciones de un vértice de cada partición. Esto se puede hacer en $O(v#sub[k])$, donde $v#sub[k]$ es el número de vértices en las particiones seleccionadas.
+
+  La complejidad de esta parte es $ O( binom(m,k) dot v_k^k )$. Como `k` esta acotado por `m`, esto es polinómico en el tamaño del grafo.
+
+==== Paso 2: Encontrar el Camino (Cola)
+
+Una vez que has identificado un clique de tamaño `k`, ahora necesitas encontrar un camino de longitud `k` que se conecte a uno de los vértices en el clique.
+
+- *Enfoque*: Usa una búsqueda en profundidad (DFS) comenzando desde cada vértice en el clique. El objetivo es explorar caminos desde cada vértice en el clique y encontrar un camino de longitud `k`.
+
+- *Complejidad temporal para la búsqueda del camino*:
+  - Una DFS tiene una complejidad de `O(v + e)`, donde `v` es el número de vértices y `e` es el número de aristas en el grafo.
+  - Necesitas ejecutar la DFS desde cada vértice en el clique, por lo que la complejidad total para esta parte es `O(k(v + e))`. Dado que `k` es como máximo `m`, esta parte sigue siendo polinómica en el tamaño del grafo.
+
+=== Complejidad total:
+
+La complejidad total es la suma de ambas partes:
+
+$ O( binom(m,k) dot v_k^k dot (k(v + e)) $
+
+Dado que `k` es acotado por `m`, la solución sigue siendo polinómica en el tamaño del grafo.
