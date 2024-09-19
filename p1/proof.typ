@@ -72,14 +72,27 @@ La complejidad de esta solución es O(nlogn + klogn) donde n es el tamaño de la
 
 Vamos a usar búsqueda binaria para la siguiente solución.
 
-Definamos primero la funcion de utilidad `f(x)`:
-- `f(x)`: es el numero de operaciones necesarias para que todos los valores añadidos al score en alguna operacion sean al menos x, y que todos los valores restantes en `a` sean a lo sumo x - 1.
+Definamos primero dos funciones de utilidad `f(x)` y `score(x)`
 
- Para un solo valor de i, que a[i] < x, se necesita reducir a[i] una cierta cantidad de b[i], o sea $ a[i] - b[i] * t < x $, luego despuejando `t` queda que $ t > frac(a[i] - x, b[i]) $, por lo tanto, el numero de operaciones necesarias para que a[i] sea al menos x es $ ceil(frac(a[i] - x, b[i])) $.
+Para un valor dado x, definimos la función `f(x)` como el número mínimo de operaciones necesarias para que, después de realizar dichas operaciones, cada elemento en el arreglo es menor que `x` o, lo que significa lo mismo, que todos los valores añadidos al score sean al menos x.
+
+Para un solo valor de i, que a[i] < x, se necesita reducir a[i] una cierta cantidad de b[i], o sea $ a[i] - b[i] * t < x $, luego despuejando `t` queda que $ t > frac(a[i] - x, b[i]) $, por lo tanto, el numero de operaciones necesarias para que a[i] sea al menos x es $ ceil(frac(a[i] - x, b[i])) $.
 
  , especificamente para todos los valores de `a` queda $f(x) = sum_(i=0)^n round(frac(a[i] - x, b[i])) $
 
-Usemos primero búsqueda binaria para encontrar el valor de `x` que maximiza el score, podemos usar búsqueda binaria en el rango $[0, max(a) + 1]$, restringiendo que $f(x) <= k$, ya que $f(x)$ es una función no decreciente para un `k` fijo, o sea que a medida que aumenta `x`, la condición se vuelve más estricta y menos operaciones añadieron al menos `x` al score.
+Luego tambien definamos la funcion `score(x)`, como la funcion que dado un numero x, devuelve el score total añadido despues de haber realizado todas las operaciones de `f(x)`.
+
+Demostremos ahora que `f(x)` es *no creciente*. O sea que para $x_1 < x_2 => f(x_1) >= f(x_2)$. Seanse dos números $x_1$ y $x_2$ tal que $x_1<x_2$. Llamemos $y=f(x_2)$. Luego sea el estado del array despues de haber aplicado dichas $y$ operaciones el siguiente $[a_1, a_2, dots.h, a_i ]$.
+
+Ahora, si $not exists(i) : a_i > x_1 => f(x_1) = f(x_2)$, ya que no hay necesidad de realizar operaciones extras para que todos los valores del arreglo sean igual a $x_1$. Ahora, imaginemos que $exists(i) : a_i > x_1$, este valor puede existir ya que $x_1<x_2$. Luego es necesario realizar al menos una operacion extra para reducir ese valor para que $a_i<x_1$, o sea que $f(x_1)>f(x_2)$ en ese caso. Por tanto queda que $forall x_1 < x_2 => f(x_1) >= f(x_2) $
+
+Ahora demostremos que sucede lo mismo con `score(x)`. O sea que para $x_1 < x_2 => "score"(x_1) >= "score"(x_2)$. Seanse dos números $x_1$ y $x_2$ tal que $x_1<x_2$. Como se demostro anteriormente, en esta situacion $f(x_1) >= f(x_2)$, luego como ya se demostro en la solucion greedy, este problema posee la propiedad de subestructura optima, o sea que la solucion de mas de operaciones de apoya en la solucion de menos operaciones, y como todos los valores para añadir al score son positivos, menos operaciones implican menos score. Por tanto  $"score"(x_1) >= "score"(x_2)$, osea que `score(x)` es una funcion no creciente.
+
+_Probablemente la primera igual salia por subestructura optima pero aun no me he dado cuenta de como hacerlo_
+
+Ahora, como tanto `f(x)` como `score(x)` son funciones monotonas no crecientes dado el mismo parametro, yo puedo decir con seguridad que buscar la `x` que maximiza la cantidad de operaciones mientras las mantiene por debajo de `k` implica a su vez buscar la `x` que maximiza el score. Y como `f(x)` es una funcion monotona, se puede hacer busqueda binaria.
+
+Por tanto vamos a buscar el valor de `x` que maximice el score restringiendo que $f(x)<=k$. Podemos restringir el espacio de busqueda a $[0, max(a) + 1]$ por obvias razones.
 
 ```py
 low, top = 0, max(a) + 1
@@ -105,7 +118,7 @@ Analicemos cada indice `i` por separado. Como se demostró antes en la fórmula 
 
 $ S = t * a[i] - frac(t * (t - 1), 2) * b[i] $
 
-Asi que el score total es la suma de todos los `S` para cada `i` tal que $a[i] < x$ y $a[i] >= x$. Puede darse el caso que esta última fórmula se usen más operaciones de las que se tienen, cada una aportando `x` a la solución general, en ese caso se debe ajustar la solución quitando las operaciones extras y su contribución.
+Asi que el score total es la suma de todos los `S` para cada `i` tal que $a[i] >= x$. Puede darse el caso que esta última fórmula se usen más operaciones de las que se tienen, cada una aportando `x` a la solución general, en ese caso se debe ajustar la solución quitando las operaciones extras y su contribución.
 
 ```py
 ans = 0
