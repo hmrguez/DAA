@@ -24,7 +24,7 @@ El prefijo XOR se define como la operacion XOR a todos los elementos desde el in
 
 $ "prefix"[i] = a#sub[1] #sym.xor a#sub[2] #sym.xor #sym.dots.h #sym.xor a#sub[i] $
 
-La funcion XOR possee propiedades conmitativa, transitiva y distributiva, y no solo eso, sino tambien posee la propiedad de que $a #sym.xor a = 0$. Lo cual hace esta operacion muy maleable a la hora de tratar con el prefijo ya que dado `l` y `r` enteros donde  `l < r`
+La funcion XOR possee propiedades conmutativa, transitiva y distributiva, y no solo eso, sino también posee la propiedad de que $a #sym.xor a = 0$. Lo cual hace esta operacion muy maleable a la hora de tratar con el prefijo ya que dado `l` y `r` enteros donde  `l < r`
 
 $ "XOR"(a#sub[1], a#sub[2], #sym.dots.h, a#sub[l]) = "prefix"[l] $
 
@@ -80,8 +80,8 @@ Pasos del Algoritmo:
 
 El algoritmo divide el problema en subproblemas donde, para cada elemento  a[x] , se calcula la apatia de todos los subarreglos en los que  a[x]  es el elemento máximo. El arreglo se divide en dos regiones:
 
-	•	Izquierda de a[x]: Los subarreglos de $a[l], a[l+1], #sym.dots.h, a[x]$.
-	•	Derecha de a[x]: Los subarreglos de $a[x], a[x+1], #sym.dots.h, a[r]$.
+	-	Izquierda de a[x]: Los subarreglos de $a[l], a[l+1], #sym.dots.h, a[x]$.
+	-	Derecha de a[x]: Los subarreglos de $a[x], a[x+1], #sym.dots.h, a[r]$.
 
 Estos subarreglos se resuelven de manera independiente y sus resultados se combinan usando programación dinámica y operaciones basadas en Trie.
 
@@ -90,22 +90,22 @@ Estos subarreglos se resuelven de manera independiente y sus resultados se combi
 Para demostrar que el enfoque de programación dinámica es correcto, debemos establecer que el problema exhibe la propiedad de subestructura óptima, es decir, que la solución óptima para todo el problema se puede construir a partir de las soluciones óptimas de sus subproblemas.
 
 	1.	Caso base:
-	•	Cuando el arreglo tiene tamaño 1 (es decir, solo un elemento), el único subarreglo posible es el propio elemento. En este caso, el elemento máximo y el XOR del subarreglo son ambos  a#sub[1] , y la apatia es:
+	-	Cuando el arreglo tiene tamaño 1 (es decir, solo un elemento), el único subarreglo posible es el propio elemento. En este caso, el elemento máximo y el XOR del subarreglo son ambos  a#sub[1] , y la apatia es:
 
 $"apatia" = a#sub[1] #sym.xor a#sub[1] = 0 $
 
-	•	Por lo tanto, el caso base se cumple de manera trivial.
+	-	Por lo tanto, el caso base se cumple de manera trivial.
 
 	2.	Caso recursivo:
-	•	Para un subarreglo de longitud  n , se debe encontrar la apatia máxima considerando todos los subarreglos que contienen un elemento máximo específico  `a[x]` .
-	•	El algoritmo divide el arreglo en dos mitades según la posición de  `a[x]`  y calcula la apatia de los subarreglos izquierdo y derecho de manera independiente.
-	•	Estos subproblemas se pueden resolver recursivamente aplicando el mismo procedimiento (dividiendo los subarreglos izquierdo y derecho en subarreglos más pequeños). Esto garantiza que todo el problema se resuelva de manera óptima si todos los subarreglos más pequeños se resuelven de manera óptima.
+	-	Para un subarreglo de longitud  n , se debe encontrar la apatia máxima considerando todos los subarreglos que contienen un elemento máximo específico  `a[x]` .
+	-	El algoritmo divide el arreglo en dos mitades según la posición de  `a[x]`  y calcula la apatia de los subarreglos izquierdo y derecho de manera independiente.
+	-	Estos subproblemas se pueden resolver recursivamente aplicando el mismo procedimiento (dividiendo los subarreglos izquierdo y derecho en subarreglos más pequeños). Esto garantiza que todo el problema se resuelva de manera óptima si todos los subarreglos más pequeños se resuelven de manera óptima.
 
 	3.	Combinando los resultados de los subproblemas:
-	•	Una vez que tenemos las soluciones óptimas para los subarreglos a la izquierda y derecha de  `a[x]` , se calcula la apatia máxima para los subarreglos que contienen a  `a[x]`  consultando el subarreglo opuesto usando el Trie.
-	•	La consulta maximiza el XOR de los subarreglos que involucran ambas mitades y se almacena el resultado.
-	•	Finalmente, fusionamos los Tries de los subarreglos izquierdo y derecho para mantener consultas y procesamiento eficientes de subarreglos más grandes.
-	•   Resultando en que eventualmente hice queries de maxima apatia a todos los subarreglos posibles.
+	-	Una vez que tenemos las soluciones óptimas para los subarreglos a la izquierda y derecha de  `a[x]` , se calcula la apatia máxima para los subarreglos que contienen a  `a[x]`  consultando el subarreglo opuesto usando el Trie.
+	-	La consulta maximiza el XOR de los subarreglos que involucran ambas mitades y se almacena el resultado.
+	-	Finalmente, fusionamos los Tries de los subarreglos izquierdo y derecho para mantener consultas y procesamiento eficientes de subarreglos más grandes.
+	-   Resultando en que eventualmente hice queries de maxima apatia a todos los subarreglos posibles.
 
 Por lo tanto, se cumple la propiedad de subestructura óptima porque resolver el problema para todo el arreglo se reduce a resolver subarreglos más pequeños de manera óptima y combinar sus resultados de manera eficiente.
 
@@ -114,12 +114,12 @@ Por lo tanto, se cumple la propiedad de subestructura óptima porque resolver el
 En programación dinámica, los subproblemas superpuestos implican que el algoritmo resuelve el mismo subproblema varias veces, pero en lugar de volver a calcularlo, se reutilizan los resultados.
 
 	1.	Estructura Trie:
-	•	El Trie almacena los valores de XOR de prefijo para los subarreglos que ya se han procesado. Esto permite que el algoritmo reutilice estos valores al calcular la apatia de subarreglos más grandes.
-	•	En lugar de recalcular el XOR para subarreglos superpuestos varias veces, el algoritmo simplemente consulta el Trie, que ya ha almacenado los valores de XOR de prefijo necesarios de cálculos anteriores.
+	-	El Trie almacena los valores de XOR de prefijo para los subarreglos que ya se han procesado. Esto permite que el algoritmo reutilice estos valores al calcular la apatia de subarreglos más grandes.
+	-	En lugar de recalcular el XOR para subarreglos superpuestos varias veces, el algoritmo simplemente consulta el Trie, que ya ha almacenado los valores de XOR de prefijo necesarios de cálculos anteriores.
 
 	2.	Fusión de los Tries:
-	•	Al fusionar el Trie más pequeño en el más grande, el algoritmo asegura que los resultados del subarreglo más pequeño se reutilicen al procesar el subarreglo más grande. Esta reutilización de información evita que el algoritmo resuelva el mismo subproblema varias veces.
-	•	El paso de fusión garantiza que la complejidad computacional siga siendo eficiente, ya que el Trie de cada subarreglo se utiliza para calcular rápidamente el XOR de subarreglos que abarcan ambas mitades.
+	-	Al fusionar el Trie más pequeño en el más grande, el algoritmo asegura que los resultados del subarreglo más pequeño se reutilicen al procesar el subarreglo más grande. Esta reutilización de información evita que el algoritmo resuelva el mismo subproblema varias veces.
+	-	El paso de fusión garantiza que la complejidad computacional siga siendo eficiente, ya que el Trie de cada subarreglo se utiliza para calcular rápidamente el XOR de subarreglos que abarcan ambas mitades.
 
 Por lo tanto, el algoritmo satisface la propiedad de subproblemas superpuestos al reutilizar de manera eficiente los valores de XOR de prefijo almacenados en el Trie, evitando cálculos redundantes.
 
@@ -128,14 +128,16 @@ Por lo tanto, el algoritmo satisface la propiedad de subproblemas superpuestos a
 Para demostrar la corrección mediante inducción, seguimos estos pasos:
 
 	1.	Caso base:
-	•	Para un solo elemento (arreglo de tamaño  `n = 1` ), el algoritmo calcula correctamente la apatia como 0, que es el único resultado válido. Por lo tanto, el caso base se cumple.
+	-	Para un solo elemento (arreglo de tamaño  `n = 1` ), el algoritmo calcula correctamente la apatia como 0, que es el único resultado válido. Por lo tanto, el caso base se cumple.
+
 	2.	Hipótesis inductiva:
-	•	Supongamos que el algoritmo calcula correctamente la apatia máxima para todos los arreglos de tamaño  `k` , donde  `k < n` .
+	-	Supongamos que el algoritmo calcula correctamente la apatia máxima para todos los arreglos de tamaño  `k` , donde  `k < n` .
+
 	3.	Paso inductivo:
-	•	Para un arreglo de tamaño  `n` , el algoritmo divide el arreglo en subarreglos a la izquierda y derecha del elemento máximo  `a[x]` .
-	•	Según la hipótesis inductiva, asumimos que el algoritmo calcula correctamente la apatia máxima para estos subarreglos más pequeños.
-	•	Luego, el algoritmo combina los resultados de los subarreglos izquierdo y derecho consultando el Trie, que almacena los valores de XOR de prefijo. La corrección del cálculo de XOR está garantizada por las propiedades del XOR de prefijo, y la consulta del Trie asegura que la apatia se maximice.
-	•	Por lo tanto, el algoritmo calcula correctamente la apatia máxima para todo el arreglo al combinar los resultados de los subarreglos más pequeños.
+	-	Para un arreglo de tamaño  `n` , el algoritmo divide el arreglo en subarreglos a la izquierda y derecha del elemento máximo  `a[x]` .
+	-	Según la hipótesis inductiva, asumimos que el algoritmo calcula correctamente la apatia máxima para estos subarreglos más pequeños.
+	-	Luego, el algoritmo combina los resultados de los subarreglos izquierdo y derecho consultando el Trie, que almacena los valores de XOR de prefijo. La corrección del cálculo de XOR está garantizada por las propiedades del XOR de prefijo, y la consulta del Trie asegura que la apatia se maximice.
+	-	Por lo tanto, el algoritmo calcula correctamente la apatia máxima para todo el arreglo al combinar los resultados de los subarreglos más pequeños.
 
 De esta manera, mediante inducción, el algoritmo es correcto para arreglos de todos los tamaños.
 
@@ -144,10 +146,11 @@ De esta manera, mediante inducción, el algoritmo es correcto para arreglos de t
 La eficiencia del algoritmo es otro aspecto importante:
 
 	1.	Operaciones en Trie:
-	•	Cada inserción y consulta en el Trie toma  `O(log 32)`  tiempo, ya que el Trie almacena valores de XOR de prefijo de 32 bits.
-	•	Ordenar los elementos toma  `O(n log n)` , y las operaciones en el Trie se realizan  `O(n log n)`  veces.
-	•	Por lo tanto, la complejidad temporal total es  `O(n log n log 32 + n log n) = O(n log n)` .
+	-	Cada inserción y consulta en el Trie toma  `O(log 32)`  tiempo, ya que el Trie almacena valores de XOR de prefijo de 32 bits.
+	-	Ordenar los elementos toma  `O(n log n)` , y las operaciones en el Trie se realizan  `O(n log n)`  veces.
+	-	Por lo tanto, la complejidad temporal total es  `O(n log n log 32 + n log n) = O(n log n)` .
+
 	2.	Fusión de los Tries:
-	•	La estrategia de fusión de menor a mayor garantiza que las operaciones en el Trie sigan siendo eficientes incluso cuando los subarreglos crecen en tamaño, evitando cálculos redundantes.
+	-	La estrategia de fusión de menor a mayor garantiza que las operaciones en el Trie sigan siendo eficientes incluso cuando los subarreglos crecen en tamaño, evitando cálculos redundantes.
 
 Por lo tanto, el algoritmo es tanto correcto como eficiente, como lo demuestra su adherencia a los principios de la programación dinámica y su complejidad temporal óptima.
