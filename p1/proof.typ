@@ -112,13 +112,78 @@ while top - low > 1:
 x = low
 ```
 
-Luego de encontrar el valor de `x`, tenemos que calcular el score. Cada indice `i` tal que $a[i] >= x$ contribuye con `x` al score, y los indices `i` tal que `a[i] < x` contribuyen con `a[i] - b[i] * t` al score, donde `t` es el numero de operaciones necesarias para que `a[i]` sea al menos `x`. Luego para cada indice `i`, se puede decir que contribuye a la suma total una serie de crecimiento discreto (en concreto de saltos de tamaños b[i]).
 
-Analicemos cada indice `i` por separado. Como se demostró antes en la fórmula de `f(x)`, el número de operaciones necesarias para que `a[i]` sea al menos `x` es $t=ceil(frac(a[i] - x, b[i]))$. La secuencia de esos números tiene como primer elemento a a[i], ya que fue el primero en ser añadido al score, y el último es $a_1-b_1*(t-1)$. Como estamos tratando con una serie de crecimiento discreto la suma de un fragmento de ella se resume a la formula de  `S=t*(primer_term + ultimo_term)/2`. Sustituyendo y calculando queda de la siguiente forma
+Ahora depues de encontrar dicho `x` necesitamos resolver el problema, o sea calcular el score que dicho `x` genera.
 
-$ S = t * a[i] - frac(t * (t - 1), 2) * b[i] $
+Para cada elemento `a[i]`, calculamos el número de operaciones $t_i$ necesarias para reducir su valor por debajo de `x`:
 
-Asi que el score total es la suma de todos los `S` para cada `i` tal que $a[i] >= x$. Puede darse el caso que esta última fórmula se usen más operaciones de las que se tienen, cada una aportando `x` a la solución general, en ese caso se debe ajustar la solución quitando las operaciones extras y su contribución.
+
+$t_i = round(frac(a[i] - x, b[i])) $
+
+
+Detalles:
+
+	-	Si a[i] ≤ x: No se requieren operaciones, es decir, $t_i = 0$.
+	-	Si a[i] > x: Se necesitan $t_i$ operaciones para reducir `a[i]` por debajo de `x`.
+
+
+Una vez que conocemos cuántas veces se aplica una operación a cada `a[i]`, calculamos cómo contribuye cada uno al score total.
+
+Para un índice i con $t_i$ operaciones, la secuencia de valores de a[i] antes de cada operación es:
+
+
+$ a[i], a[i] - b[i], a[i] - 2b[i], dots.h , a[i] - (t_i - 1)b[i] $
+
+
+Contribución al Score (S#sub[i]):
+
+La suma de estos valores es:
+
+
+$ S_i = a[i] + (a[i] - b[i]) + (a[i] - 2b[i]) + dots.h + (a[i] - (t_i - 1)b[i]) $
+
+
+Esto es una serie aritmética con:
+
+-	Primer término (a#sub[1]): $a[i]$
+-	Último término (a#sub[t#sub[i]]): $a[i] - (t_i - 1)b[i]$
+-	Número de términos (t#sub[i]): $t_i$
+
+La suma de una serie aritmética se calcula mediante la fórmula:
+
+
+$ S_i = t_i times frac(a_1 + a_t_i,2) $
+
+
+Sustituyendo:
+
+
+$ S_i = t_i times frac(a[i] + (a[i] - (t_i - 1)b[i]),2) = t_i times ( a[i] - frac((t_i - 1)b[i],2) ) $
+
+
+Simplificando nos lleva a la formula final para calcular el score contribuido por un solo lugar del arreglo:
+
+
+$ S_i = t_i times a[i] - frac(t_i times (t_i - 1),2) times b[i] $
+
+
+El score total es la suma de las contribuciones individuales de todos los índices:
+
+
+$ "Score" = sum_(i=1)^n S_i = sum_(i=1)^n (t_i dot a[i] - frac(t_i dot (t_i - 1),2) dot b[i] ) $
+
+
+Es posible que la suma total de operaciones $S = sum t_i$ exceda el número permitido de operaciones k porque esta no es la formula exacta.
+
+¿Por Qué Pueden Suceder Operaciones Excedentes?
+
+	-	Asignación Localmente Óptima: Al calcular $t_i$ para cada `a[i]` de manera independiente, garantizamos que cada operación aplicada a `a[i]` contribuye con al menos x.
+	-	No Consideración del Límite Global: Al hacerlo de manera independiente, no consideramos inmediatamente el límite global de k operaciones, lo que puede resultar en S > k.
+
+En esencia, cuando se hace la operacion `t = (a[i] - x) // b[i] + 1` se pueden cometer errores de -1 ya que el resultado no es exacto asi que se esta añadiendo x extra por cada vez que se haga eso.
+
+En tal caso, necesitamos ajustar el score para reflejar únicamente `k` operaciones. O sea que buscamos la cantidad de operaciones excedentes $S-k$, y cada una de estas operaciones excedentes aporto al menos `x` al score. Asi que al resultado final le restamos $x dot (S-k)$
+
 
 ```py
 ans = 0
@@ -135,4 +200,9 @@ ans -= x * (s - k)
 return ans
 ```
 
-La complejidad de esta solución es $O(n log f)$ donde $f$ es $max(a)$
+La complejidad del problema se divide en lo siguiente:
+- Busqueda binaria en x $->$ O(log max(a))
+- Dentro de la busqueda binaria se realiza el calculo de f(x) $->$ O(n)
+- Luego para asignar el score se recorre el arregle $->$ O(n)
+
+$ therefore O(n dot log max(a) + n) = O(n dot log max(a)) $
