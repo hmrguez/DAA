@@ -109,8 +109,7 @@ Si el grafo es *m-partito* sucede algo curioso que puede reducir la complejidad 
 3. *Camino*: La "cola" es un camino de longitud `k`, y el objetivo es encontrar este camino utilizando una búsqueda en profundidad (DFS) comenzando desde uno de los vértices en el clique.
 
 === Observaciones clave:
-- *Restricción del clique*: No puedes tener un clique más grande que ` m ` en un grafo ` m `-partito, ya que no hay dos vértices en la misma partición que estén conectados. Esto simplifica la búsqueda de un clique de tamaño ` k `.
-- *Principio del palomar*: Si ` k > m `, encontrar un clique de tamaño ` k ` es imposible, ya que requeriría que al menos dos vértices de la misma partición estuvieran conectados, lo cual no está permitido.
+- *Restricción del clique por principio del palomar*: Si ` k > m `, encontrar un clique de tamaño ` k ` es imposible, ya que requeriría que al menos dos vértices de la misma partición estuvieran conectados, lo cual no está permitido.
 
 === Formalización paso a paso:
 
@@ -125,7 +124,7 @@ Para encontrar un clique de tamaño `k`:
   - Necesitas considerar todos los subconjuntos de `k`-particiones de `m`, lo que se puede hacer en $O( binom(m,k) )$ (el número de maneras de elegir `k` particiones de `m`).
   - Para cada subconjunto de `k` particiones, necesitas verificar todas las posibles combinaciones de un vértice de cada partición. Esto se puede hacer en $O(v#sub[k])$, donde $v#sub[k]$ es el número de vértices en las particiones seleccionadas.
 
-  La complejidad de esta parte es $ O( binom(m,k) dot v_k^k )$. Como `k` esta acotado por `m`, esto es polinómico en el tamaño del grafo.
+  La complejidad de esta parte es $ O( binom(m,k) dot v_k^k )$. Como `k` esta acotado por `m`, esto es exponencial en el tamaño del grafo, no de la solucion.
 
 ==== Paso 2: Encontrar el Camino (Cola)
 
@@ -135,7 +134,7 @@ Una vez que has identificado un clique de tamaño `k`, ahora necesitas encontrar
 
 - *Complejidad temporal para la búsqueda del camino*:
   - Una DFS tiene una complejidad de `O(v + e)`, donde `v` es el número de vértices y `e` es el número de aristas en el grafo.
-  - Necesitas ejecutar la DFS desde cada vértice en el clique, por lo que la complejidad total para esta parte es `O(k(v + e))`. Dado que `k` es como máximo `m`, esta parte sigue siendo polinómica en el tamaño del grafo.
+  - Necesitas ejecutar la DFS desde cada vértice en el clique, por lo que la complejidad total para esta parte es `O(k(v + e))`. Dado que `k` es como máximo `m`, esta parte es polinomial y depende del tamaño del grafo.
 
 === Complejidad total:
 
@@ -143,4 +142,4 @@ La complejidad total es la suma de ambas partes:
 
 $ O( binom(m,k) dot v_k^k dot (k(v + e)) $
 
-Dado que `k` es acotado por `m`, la solución sigue siendo polinómica en el tamaño del grafo.
+Dado que `k` es acotado por `m`, la solución sigue siendo exponencial en el tamaño del grafo, y no de la solución, lo que achica la complejidad.
